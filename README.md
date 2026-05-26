@@ -5,11 +5,13 @@ A lightweight command-line tool for benchmarking and comparing machine learning 
 ## Features
 
 - Benchmark multiple ML models simultaneously
-- Support for popular datasets (Iris, Breast Cancer, Wine)
-- Metrics: Accuracy, Training Time, Inference Time
-- Easy-to-read table output
+- Support for popular datasets (Iris, Breast Cancer, Wine) and custom CSV datasets
+- Metrics: Accuracy, Training Time, Inference Time, Cross-Validation Scores
+- Easy-to-read table output with CV mean and std
 - JSON export for further analysis
 - Minimal dependencies (only numpy, scikit-learn, pandas)
+- Model selection via --models flag
+- Configurable cross-validation folds
 
 ## Tech Stack
 
@@ -24,13 +26,13 @@ A lightweight command-line tool for benchmarking and comparing machine learning 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/mlbench.git
+   git clone https://github.com/aryan9190/mlbench.git
    cd mlbench
    ```
 
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install --break-system-packages -r requirements.txt
    ```
 
 ## Usage
@@ -45,9 +47,24 @@ Specify a different dataset:
 python main.py --dataset breast_cancer
 ```
 
+Use a custom CSV dataset:
+```bash
+python main.py --csv path/to/your/data.csv
+```
+
 Adjust the test/train split:
 ```bash
 python main.py --dataset wine --test-size 0.3
+```
+
+Benchmark specific models only:
+```bash
+python main.py --models "Random Forest" "SVM"
+```
+
+Adjust cross-validation folds:
+```bash
+python main.py --cv 3
 ```
 
 Save results to a JSON file:
@@ -66,27 +83,34 @@ python main.py --save --output my_benchmark_results.json
 Loading dataset: iris
 Splitting data (test_size=0.2)
 
-Benchmarking models...
+Benchmarking 5 model(s)...
   Testing Random Forest...
+    Running 5-fold cross-validation...
   Testing SVM...
+    Running 5-fold cross-validation...
   Testing Logistic Regression...
+    Running 5-fold cross-validation...
   Testing K-Nearest Neighbors...
+    Running 5-fold cross-validation...
   Testing Decision Tree...
+    Running 5-fold cross-validation...
 
-============================================================
+======================================================================
 BENCHMARK RESULTS FOR IRIS
-============================================================
-Model                      Accuracy    Train Time (s)   Predict Time (s)
--------------------------  ----------  -----------------  -----------------
-Random Forest              0.9667      0.0123             0.0008
-SVM                        0.9667      0.0045             0.0012
-Logistic Regression        0.9667      0.0012             0.0005
-K-Nearest Neighbors        0.9333      0.0001             0.0003
-Decision Tree              0.9333      0.0008             0.0001
+======================================================================
+Model                     Accuracy   Train Time (s)  Predict Time (s) CV Mean    CV Std    
+------------------------- ---------- --------------- --------------- ---------- ----------
+K-Nearest Neighbors       1.0000     0.0006          0.0015          0.9733     0.0249    
+SVM                       0.9667     0.0017          0.0002          0.9667     0.0211    
+Logistic Regression       0.9667     0.0106          0.0002          0.9733     0.0249    
+Decision Tree             0.9333     0.0009          0.0001          0.9533     0.0340    
+Random Forest             0.9000     0.1097          0.0062          0.9667     0.0211    
 
-🏆 Best Model: Random Forest (Accuracy: 0.9667)
+🏆 Best Model: K-Nearest Neighbors (Accuracy: 1.0000)
 
-Results saved to benchmark_iris_1623456789.json
+Detailed classification report for K-Nearest Neighbors:
+
+Results saved to benchmark_iris_1779786117.json
 ```
 
 ## Project Structure
